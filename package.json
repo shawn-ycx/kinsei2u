@@ -37,7 +37,7 @@
     "react-icons": "^3.7.0",
     "react-typography": "^0.16.19",
     "rebass": "^4.0.5",
-    "shopify-buy": "^2.0.1",
+    "shopify-buy": "^2.7.1",
     "theme-ui": "^0.2.41",
     "typography": "^0.16.19"
   },
