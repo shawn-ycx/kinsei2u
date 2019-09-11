@@ -1,11 +1,11 @@
 require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
-});
+})
 
 module.exports = {
   siteMetadata: {
     title: `Kinsei2u`,
-    description: `Kick off your next, ecommerce experience with this Gatsby starter. This starter ships with credentials to a shopify demo store so you can try it out immediately.`,
+    description: `kinsei2u e-commerce revamp`,
     author: `@shawnycx`,
   },
   plugins: [
@@ -26,8 +26,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `kinsei online store`,
+        short_name: `kinsei2u`,
         start_url: `/`,
         background_color: `#663399`,
         theme_color: `#663399`,
@@ -70,4 +70,4 @@ module.exports = {
     // To learn more, visit: https://gatsby.app/offline
     // 'gatsby-plugin-offline',
   ],
-};
+}
