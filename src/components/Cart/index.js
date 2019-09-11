@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 
 import StoreContext from '../../context/StoreContext'
 import LineItem from './LineItem'
+import EmptyCart from './EmptyCart'
 
 const Cart = () => {
   const context = useContext(StoreContext)
@@ -14,6 +15,10 @@ const Cart = () => {
   const line_items = checkout.lineItems.map(line_item => {
     return <LineItem key={line_item.id.toString()} line_item={line_item} />
   })
+
+  if (!checkout.lineItems.length) {
+    return <EmptyCart />
+  }
 
   return (
     <div>

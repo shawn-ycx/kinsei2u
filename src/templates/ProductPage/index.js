@@ -1,22 +1,22 @@
-import React from 'react';
-import { graphql } from 'gatsby';
-import { Flex, Box } from 'rebass';
+import React from 'react'
+import { graphql } from 'gatsby'
+import { Flex, Box } from 'rebass'
 
-import ProductForm from '../../components/ProductForm';
-// import { Img } from '../../utils/styles';
+import ProductForm from '../../components/ProductForm'
+import { Img } from '../../utils/styles'
 
 const ProductPage = ({ data }) => {
-  const product = data.shopifyProduct;
+  const product = data.shopifyProduct
   return (
     <Flex flexWrap="wrap">
       <Box pr={[null, 3]} width={[1, 1 / 2]}>
-        {/* {product.images.map(x => (
+        {product.images.map(x => (
           <Img
             fluid={x.localFile.childImageSharp.fluid}
             key={x.id}
             alt={product.title}
           />
-        ))} */}
+        ))}
       </Box>
       <Box width={[1, 1 / 2]}>
         <h1>{product.title}</h1>
@@ -24,8 +24,8 @@ const ProductPage = ({ data }) => {
         <ProductForm product={product} />
       </Box>
     </Flex>
-  );
-};
+  )
+}
 
 export const query = graphql`
   query($handle: String!) {
@@ -65,6 +65,6 @@ export const query = graphql`
       }
     }
   }
-`;
+`
 
-export default ProductPage;
+export default ProductPage

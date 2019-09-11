@@ -1,12 +1,13 @@
-import React from 'react';
+import React from 'react'
 
-import Cart from '../components/Cart';
+import Cart from '../components/Cart'
+import { Typography, Container } from '@material-ui/core'
 
 const CartPage = () => (
-  <div>
-    <h1>Cart</h1>
+  <Container>
+    <Typography variant="h2">Cart</Typography>
     <Cart />
-  </div>
-);
+  </Container>
+)
 
-export default CartPage;
+export default CartPage

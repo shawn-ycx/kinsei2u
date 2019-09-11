@@ -1,59 +1,53 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Flex, Box } from 'rebass';
-import {
-  MdClose,
-  MdShoppingCart,
-  MdArrowBack,
-  MdArrowForward,
-  MdFace,
-} from 'react-icons/md';
-import { Link } from 'gatsby';
-import PropTypes from 'prop-types';
-import StoreContext from '../../context/StoreContext';
-import CartButton from '../Cart/CartButton';
+import React from 'react'
 
-const Container = props => (
-  <Flex {...props} mx="1em" py="2em" px={2} alignItems="center" />
-);
+import { makeStyles, Container } from '@material-ui/core'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
 
-const countQuantity = lineItems =>
-  lineItems.reduce((total, item) => total + item.quantity, 0);
+import { Link } from 'gatsby-theme-material-ui'
+import { MdFace } from 'react-icons/md'
+import CartButton from '../Cart/CartButton'
+import ActionNav from './ActionNav'
 
-const Navigation = ({ siteTitle }) => {
-  const context = useContext(StoreContext);
-  const { checkout } = context;
-  const [quantity, setQuantity] = useState(
-    countQuantity(checkout ? checkout.lineItems : [])
-  );
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  appbar: {
+    background: 'white',
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  logo: {
+    fontSize: '1.5em',
+  },
+}))
 
-  useEffect(
-    () => {
-      setQuantity(countQuantity(checkout ? checkout.lineItems : []));
-    },
-    [checkout]
-  );
+const Navigation = () => {
+  const classes = useStyles()
 
   return (
-    <Container>
-      <header>
-        <h1>
-          <Link to="/">
-            <MdFace />
-          </Link>
-        </h1>
-      </header>
-      <Box mx="auto" />
-      <CartButton />
-    </Container>
-  );
-};
+    <div className={classes.root}>
+      <AppBar position="relative" className={classes.appbar} elevate={0}>
+        <Container>
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              <Link to="/" className={classes.logo}>
+                <MdFace />
+              </Link>
+            </Typography>
+            <CartButton />
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <ActionNav />
+    </div>
+  )
+}
 
-Navigation.propTypes = {
-  siteTitle: PropTypes.string,
-};
-
-Navigation.defaultProps = {
-  siteTitle: ``,
-};
-
-export default Navigation;
+export default Navigation

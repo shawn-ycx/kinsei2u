@@ -1,8 +1,8 @@
-import React from 'react';
-import Image from 'gatsby-image';
-import { Flex } from 'rebass';
-import styled from '@emotion/styled-base';
-import { Global, css } from '@emotion/core';
+import React from 'react'
+import Image from 'gatsby-image'
+import { Flex } from 'rebass'
+import styled from '@emotion/styled-base'
+import { Global, css } from '@emotion/core'
 
 export const Container = props => (
   <Flex
@@ -16,7 +16,7 @@ export const Container = props => (
       maxWidth: 960,
     }}
   />
-);
+)
 
 export const Img = styled(Image)`
   max-width: 100 %;
@@ -28,6 +28,6 @@ export const Img = styled(Image)`
   padding-right: 0;
   padding-top: 0;
   margin-bottom: 1.45rem;
-`;
+`
 
-export const GlobalStyle = ({ children }) => <div>{children}</div>;
+export const GlobalStyle = ({ children }) => <div>{children}</div>
