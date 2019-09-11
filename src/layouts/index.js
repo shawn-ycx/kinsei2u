@@ -222,7 +222,7 @@ const useStyles = makeStyles(theme => ({
 const RenderLayoutComponent = ({ data, children }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleDrawerToggle = React.useCallback(() => setOpen(!open));
 
