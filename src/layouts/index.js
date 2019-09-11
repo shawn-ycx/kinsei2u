@@ -1,22 +1,22 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StaticQuery, graphql } from 'gatsby';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { StaticQuery, graphql } from 'gatsby'
 
-import StoreContext, { defaultStoreContext } from '../context/StoreContext';
-import { GlobalStyle } from '../utils/styles';
-import Navigation from '../components/Navigation';
-import { useTheme, makeStyles } from '@material-ui/styles';
+import StoreContext, { defaultStoreContext } from '../context/StoreContext'
+import { GlobalStyle } from '../utils/styles'
+import Navigation from '../components/Navigation'
+import { useTheme, makeStyles } from '@material-ui/styles'
 import {
   CssBaseline,
   Container,
   Drawer,
   Divider,
   Typography,
-} from '@material-ui/core';
-import clsx from 'clsx';
-import { IconButton } from 'gatsby-theme-material-ui';
-import { MdChevronRight, MdChevronLeft } from 'react-icons/md';
-import Cart from '../components/Cart';
+} from '@material-ui/core'
+import clsx from 'clsx'
+import { IconButton } from 'gatsby-theme-material-ui'
+import { MdChevronRight, MdChevronLeft } from 'react-icons/md'
+import Cart from '../components/Cart'
 
 class Layout extends React.Component {
   state = {
@@ -24,8 +24,8 @@ class Layout extends React.Component {
       ...defaultStoreContext,
       addVariantToCart: (variantId, quantity) => {
         if (variantId === '' || !quantity) {
-          console.error('Both a size and quantity are required.');
-          return;
+          console.error('Both a size and quantity are required.')
+          return
         }
 
         this.setState(state => ({
@@ -33,13 +33,13 @@ class Layout extends React.Component {
             ...state.store,
             adding: true,
           },
-        }));
+        }))
 
-        const { checkout, client } = this.state.store;
-        const checkoutId = checkout.id;
+        const { checkout, client } = this.state.store
+        const checkoutId = checkout.id
         const lineItemsToUpdate = [
           { variantId, quantity: parseInt(quantity, 10) },
-        ];
+        ]
 
         return client.checkout
           .addLineItems(checkoutId, lineItemsToUpdate)
@@ -50,8 +50,8 @@ class Layout extends React.Component {
                 checkout,
                 adding: false,
               },
-            }));
-          });
+            }))
+          })
       },
       removeLineItem: (client, checkoutID, lineItemID) => {
         return client.checkout
@@ -62,13 +62,13 @@ class Layout extends React.Component {
                 ...state.store,
                 checkout: res,
               },
-            }));
-          });
+            }))
+          })
       },
       updateLineItem: (client, checkoutID, lineItemID, quantity) => {
         const lineItemsToUpdate = [
           { id: lineItemID, quantity: parseInt(quantity, 10) },
-        ];
+        ]
 
         return client.checkout
           .updateLineItems(checkoutID, lineItemsToUpdate)
@@ -78,22 +78,22 @@ class Layout extends React.Component {
                 ...state.store,
                 checkout: res,
               },
-            }));
-          });
+            }))
+          })
       },
     },
-  };
+  }
 
   async initializeCheckout() {
     // Check for an existing cart.
-    const isBrowser = typeof window !== 'undefined';
+    const isBrowser = typeof window !== 'undefined'
     const existingCheckoutID = isBrowser
       ? localStorage.getItem('shopify_checkout_id')
-      : null;
+      : null
 
     const setCheckoutInState = checkout => {
       if (isBrowser) {
-        localStorage.setItem('shopify_checkout_id', checkout.id);
+        localStorage.setItem('shopify_checkout_id', checkout.id)
       }
 
       this.setState(state => ({
@@ -101,36 +101,36 @@ class Layout extends React.Component {
           ...state.store,
           checkout,
         },
-      }));
-    };
+      }))
+    }
 
-    const createNewCheckout = () => this.state.store.client.checkout.create();
-    const fetchCheckout = id => this.state.store.client.checkout.fetch(id);
+    const createNewCheckout = () => this.state.store.client.checkout.create()
+    const fetchCheckout = id => this.state.store.client.checkout.fetch(id)
 
     if (existingCheckoutID) {
       try {
-        const checkout = await fetchCheckout(existingCheckoutID);
+        const checkout = await fetchCheckout(existingCheckoutID)
 
         // Make sure this cart hasn’t already been purchased.
         if (!checkout.completedAt) {
-          setCheckoutInState(checkout);
-          return;
+          setCheckoutInState(checkout)
+          return
         }
       } catch (e) {
-        localStorage.setItem('shopify_checkout_id', null);
+        localStorage.setItem('shopify_checkout_id', null)
       }
     }
 
-    const newCheckout = await createNewCheckout();
-    setCheckoutInState(newCheckout);
+    const newCheckout = await createNewCheckout()
+    setCheckoutInState(newCheckout)
   }
 
   componentDidMount() {
-    this.initializeCheckout();
+    this.initializeCheckout()
   }
 
   render() {
-    const { children } = this.props;
+    const { children } = this.props
 
     return (
       <StoreContext.Provider value={this.state.store}>
@@ -150,15 +150,15 @@ class Layout extends React.Component {
           )}
         />
       </StoreContext.Provider>
-    );
+    )
   }
 }
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-};
+}
 
-const drawerWidth = 400;
+const drawerWidth = 400
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -172,12 +172,13 @@ const useStyles = makeStyles(theme => ({
     background: 'white',
   },
   appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+    },
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    marginRight: drawerWidth,
   },
   title: {
     flexGrow: 1,
@@ -186,11 +187,22 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '90vw',
+      flexShrink: 0,
+    },
   },
   drawerPaper: {
-    width: drawerWidth,
+    [theme.breakpoints.down('sm')]: {
+      width: '90vw',
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+    },
   },
   drawerHeader: {
     display: 'flex',
@@ -210,21 +222,23 @@ const useStyles = makeStyles(theme => ({
     width: '100vw',
   },
   contentShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+    },
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginRight: 0,
   },
-}));
+}))
 
 const RenderLayoutComponent = ({ data, children }) => {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const classes = useStyles()
+  const theme = useTheme()
+  const [open, setOpen] = React.useState(false)
 
-  const handleDrawerToggle = React.useCallback(() => setOpen(!open));
+  const handleDrawerToggle = React.useCallback(() => setOpen(!open))
 
   return (
     <div className={classes.root}>
@@ -234,7 +248,6 @@ const RenderLayoutComponent = ({ data, children }) => {
           [classes.appBarShift]: open,
         })}
         cartHandler={handleDrawerToggle}
-        cartIsOpen={open}
       />
       <div
         className={clsx(classes.content, {
@@ -261,11 +274,11 @@ const RenderLayoutComponent = ({ data, children }) => {
         <Cart />
       </Drawer>
     </div>
-  );
-};
+  )
+}
 
 RenderLayoutComponent.propTypes = {
   children: PropTypes.node.isRequired,
-};
+}
 
-export default Layout;
+export default Layout

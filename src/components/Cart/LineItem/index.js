@@ -1,39 +1,22 @@
-import React, { useContext } from 'react';
-import StoreContext from '../../../context/StoreContext';
+import React, { useContext } from 'react'
+import StoreContext from '../../../context/StoreContext'
 import {
   Box,
   styled,
-  Divider,
-  List,
   ListItemAvatar,
   Avatar,
   ListItem,
   ListItemText,
   Typography,
-  Input,
   TextField,
-  InputAdornment,
-  makeStyles,
   ListItemSecondaryAction,
-  ListItemIcon,
-} from '@material-ui/core';
-import { MdClose } from 'react-icons/md';
-import { Button } from 'gatsby-theme-material-ui';
-
-const StyledBox = styled(Box)`
-  & span {
-    flex-grow: 1;
-  }
-`;
-
-const inputProps = {
-  width: '25px',
-};
+} from '@material-ui/core'
+import { Button } from 'gatsby-theme-material-ui'
 
 const LineItem = props => {
-  const context = useContext(StoreContext);
-  const { line_item } = props;
-  const [quantity, setQuantity] = React.useState(line_item.quantity);
+  const context = useContext(StoreContext)
+  const { line_item } = props
+  const [quantity, setQuantity] = React.useState(line_item.quantity)
 
   const variantImage = line_item.variant.image ? (
     <img
@@ -41,23 +24,23 @@ const LineItem = props => {
       alt={`${line_item.title} product shot`}
       height="60px"
     />
-  ) : null;
+  ) : null
 
   const selectedOptions = line_item.variant.selectedOptions ? (
     <>
       {line_item.variant.selectedOptions.map(option => {
-        return `${option.name}: ${option.value} `;
+        return `${option.name}: ${option.value} `
       })}
     </>
-  ) : null;
+  ) : null
 
   const handleRemove = () => {
-    context.removeLineItem(context.client, context.checkout.id, line_item.id);
-  };
+    context.removeLineItem(context.client, context.checkout.id, line_item.id)
+  }
 
   const handleQtyChange = e => {
-    setQuantity(e.target.value);
-  };
+    setQuantity(e.target.value)
+  }
 
   const handleQtySubmit = e => {
     if (e.key === 'Enter') {
@@ -66,17 +49,17 @@ const LineItem = props => {
           context.client,
           context.checkout.id,
           line_item.id
-        );
-        return;
+        )
+        return
       }
       context.updateLineItem(
         context.client,
         context.checkout.id,
         line_item.id,
         quantity
-      );
+      )
     }
-  };
+  }
 
   return (
     <ListItem alignItems="flex-start">
@@ -91,7 +74,7 @@ const LineItem = props => {
         }
         secondary={
           <>
-            <Box>{selectedOptions}</Box>
+            {selectedOptions} <br />
             <Button
               color="secondary"
               style={{
@@ -126,7 +109,7 @@ const LineItem = props => {
         />
       </ListItemSecondaryAction>
     </ListItem>
-  );
-};
+  )
+}
 
-export default LineItem;
+export default LineItem
