@@ -30,6 +30,7 @@
     "gatsby-transformer-sharp": "^2.1.8",
     "js-yaml": "^3.13.1",
     "prop-types": "^15.6.2",
+    "pure-react-carousel": "^1.22.0",
     "querystringify": "2.0.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

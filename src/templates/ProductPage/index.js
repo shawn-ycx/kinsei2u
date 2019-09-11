@@ -1,22 +1,41 @@
-import React from 'react'
-import { graphql } from 'gatsby'
-import { Flex, Box } from 'rebass'
-
-import ProductForm from '../../components/ProductForm'
-import { Img } from '../../utils/styles'
+import React from 'react';
+import { graphql } from 'gatsby';
+import { Flex, Box } from 'rebass';
+import ProductForm from '../../components/ProductForm';
+import { Img } from '../../utils/styles';
+import {
+  CarouselProvider,
+  Slider,
+  Slide,
+  ButtonBack,
+  ButtonNext,
+  DotGroup,
+} from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
 
 const ProductPage = ({ data }) => {
-  const product = data.shopifyProduct
+  const product = data.shopifyProduct;
   return (
     <Flex flexWrap="wrap">
       <Box pr={[null, 3]} width={[1, 1 / 2]}>
-        {product.images.map(x => (
-          <Img
-            fluid={x.localFile.childImageSharp.fluid}
-            key={x.id}
-            alt={product.title}
-          />
-        ))}
+        <CarouselProvider
+          naturalSlideWidth={100}
+          naturalSlideHeight={125}
+          totalSlides={product.images.length || 0}
+        >
+          <Slider>
+            {product.images.map((x, idx) => (
+              <Slide index={idx} key={x.id}>
+                <Img
+                  fluid={x.localFile.childImageSharp.fluid}
+                  alt={product.title}
+                  height={100}
+                />
+              </Slide>
+            ))}
+          </Slider>
+          <DotGroup />
+        </CarouselProvider>
       </Box>
       <Box width={[1, 1 / 2]}>
         <h1>{product.title}</h1>
@@ -24,8 +43,8 @@ const ProductPage = ({ data }) => {
         <ProductForm product={product} />
       </Box>
     </Flex>
-  )
-}
+  );
+};
 
 export const query = graphql`
   query($handle: String!) {
@@ -65,6 +84,6 @@ export const query = graphql`
       }
     }
   }
-`
+`;
 
-export default ProductPage
+export default ProductPage;
