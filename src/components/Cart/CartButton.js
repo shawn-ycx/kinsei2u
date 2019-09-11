@@ -1,12 +1,14 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { MdShoppingCart } from 'react-icons/md'
-import { Link } from 'gatsby'
-import PropTypes from 'prop-types'
-import StoreContext from '../../context/StoreContext'
-import { Box } from 'rebass'
-import styled from '@emotion/styled'
-import { makeStyles } from '@material-ui/styles'
-import { IconButton, GatsbyLink } from 'gatsby-theme-material-ui'
+import React, { useContext, useState, useEffect } from 'react';
+import { MdShoppingCart } from 'react-icons/md';
+import { Link } from 'gatsby';
+import PropTypes from 'prop-types';
+import StoreContext from '../../context/StoreContext';
+import { Box } from 'rebass';
+import styled from '@emotion/styled';
+import { makeStyles } from '@material-ui/styles';
+import { IconButton, GatsbyLink } from 'gatsby-theme-material-ui';
+import Badge from '@material-ui/core/Badge';
+import { withStyles } from '@material-ui/core';
 
 const Cart = styled(Link)`
   & > svg {
@@ -30,7 +32,7 @@ const Cart = styled(Link)`
     font-size: 1rem;
     border-radius: 50%;
   }
-`
+`;
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -39,62 +41,61 @@ const useStyles = makeStyles(theme => ({
   input: {
     display: 'none',
   },
-}))
+  margin: {
+    margin: theme.spacing(2),
+  },
+  padding: {
+    padding: theme.spacing(0, 2),
+  },
+}));
+
+const StyledBadge = withStyles(theme => ({
+  badge: {
+    right: -3,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 3px',
+    backgroundColor: 'yellow',
+  },
+}))(Badge);
 
 const countQuantity = lineItems =>
-  lineItems.reduce((total, item) => total + item.quantity, 0)
+  lineItems.reduce((total, item) => total + item.quantity, 0);
 
-const CartButton = ({ siteTitle }) => {
-  const context = useContext(StoreContext)
-  const { checkout } = context
+const CartButton = ({ siteTitle, click }) => {
+  const context = useContext(StoreContext);
+  const { checkout } = context;
   const [quantity, setQuantity] = useState(
     countQuantity(checkout ? checkout.lineItems : [])
-  )
-  const classes = useStyles()
+  );
+  const classes = useStyles();
 
-  useEffect(() => {
-    setQuantity(countQuantity(checkout ? checkout.lineItems : []))
-  }, [checkout])
+  useEffect(
+    () => {
+      setQuantity(countQuantity(checkout ? checkout.lineItems : []));
+    },
+    [checkout]
+  );
 
   return (
-    <GatsbyLink to="/cart">
-      <IconButton
-        color="primary"
-        className={classes.button}
-        aria-label="add to shopping cart"
-      >
+    <IconButton
+      color="primary"
+      className={classes.button}
+      aria-label="add to shopping cart"
+      onClick={click}
+    >
+      <StyledBadge badgeContent={quantity}>
         <MdShoppingCart />
-      </IconButton>
-    </GatsbyLink>
-  )
-
-  return (
-    <Cart to="/cart">
-      <MdShoppingCart />
-      {!!quantity && (
-        <Box
-          sx={{
-            display: 'inline-block',
-            color: 'white',
-            bg: 'primary',
-            px: 2,
-            py: 1,
-            borderRadius: 9999,
-          }}
-        >
-          {quantity}
-        </Box>
-      )}
-    </Cart>
-  )
-}
+      </StyledBadge>
+    </IconButton>
+  );
+};
 
 CartButton.propTypes = {
   siteTitle: PropTypes.string,
-}
+};
 
 CartButton.defaultProps = {
   siteTitle: ``,
-}
+};
 
-export default CartButton
+export default CartButton;

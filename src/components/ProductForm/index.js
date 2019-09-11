@@ -1,57 +1,60 @@
-import React, { useState, useContext, useEffect } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-import StoreContext from '../../context/StoreContext'
-import VariantSelector from './VariantSelector'
+import StoreContext from '../../context/StoreContext';
+import VariantSelector from './VariantSelector';
 
 const ProductForm = props => {
-  const [quantity, setQuantity] = useState(1)
-  const [variant, setVariant] = useState(props.product.variants[0])
-  const context = useContext(StoreContext)
-  
-  const hasVariants = props.product.variants.length > 1
+  const [quantity, setQuantity] = useState(1);
+  const [variant, setVariant] = useState(props.product.variants[0]);
+  const context = useContext(StoreContext);
+
+  const hasVariants = props.product.variants.length > 1;
   const productVariant =
-  context.client.product.helpers.variantForOptions(props.product, variant) ||
-  variant
-  const [available, setAvailable] = useState(productVariant.availableForSale)
+    context.client.product.helpers.variantForOptions(props.product, variant) ||
+    variant;
+  const [available, setAvailable] = useState(productVariant.availableForSale);
 
   useEffect(() => {
-    let defaultOptionValues = {}
+    let defaultOptionValues = {};
     props.product.options.forEach(selector => {
-      defaultOptionValues[selector.name] = selector.values[0]
-    })
-    setVariant(defaultOptionValues)
-  }, [])
+      defaultOptionValues[selector.name] = selector.values[0];
+    });
+    setVariant(defaultOptionValues);
+  }, []);
 
-  useEffect(() => {
-    checkAvailability(props.product.shopifyId)
-  }, [productVariant])
+  useEffect(
+    () => {
+      checkAvailability(props.product.shopifyId);
+    },
+    [productVariant]
+  );
 
   const checkAvailability = productId => {
-    context.client.product.fetch(productId).then((product) => {
+    context.client.product.fetch(productId).then(product => {
       // this checks the currently selected variant for availability
       const result = product.variants.filter(
         variant => variant.id === productVariant.shopifyId
-      )
-      setAvailable(result[0].available)
-    })
-  }
- 
+      );
+      setAvailable(result[0].available);
+    });
+  };
+
   const handleQuantityChange = event => {
-    setQuantity(event.target.value)
-  }
+    setQuantity(event.target.value);
+  };
 
   const handleOptionChange = event => {
-    const { target } = event
+    const { target } = event;
     setVariant(prevState => ({
       ...prevState,
       [target.name]: target.value,
-    }))
-  }
+    }));
+  };
 
   const handleAddToCart = () => {
-    context.addVariantToCart(productVariant.shopifyId, quantity)
-  }
+    context.addVariantToCart(productVariant.shopifyId, quantity);
+  };
 
   const variantSelectors = hasVariants
     ? props.product.options.map(option => {
@@ -61,9 +64,9 @@ const ProductForm = props => {
             key={option.id.toString()}
             option={option}
           />
-        )
+        );
       })
-    : null
+    : null;
 
   return (
     <>
@@ -79,14 +82,14 @@ const ProductForm = props => {
         onChange={handleQuantityChange}
         value={quantity}
       />
-      <br/>
+      <br />
       <button type="submit" disabled={!available} onClick={handleAddToCart}>
         Add to Cart
       </button>
       {!available && <p>This Product is out of Stock!</p>}
     </>
-  )
-}
+  );
+};
 
 ProductForm.propTypes = {
   product: PropTypes.shape({
@@ -126,6 +129,6 @@ ProductForm.propTypes = {
     ),
   }),
   addVariantToCart: PropTypes.func,
-}
+};
 
-export default ProductForm
+export default ProductForm;

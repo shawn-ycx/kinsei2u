@@ -1,10 +1,39 @@
 import React, { useContext } from 'react';
-import { Flex, Box } from 'rebass';
 import StoreContext from '../../../context/StoreContext';
+import {
+  Box,
+  styled,
+  Divider,
+  List,
+  ListItemAvatar,
+  Avatar,
+  ListItem,
+  ListItemText,
+  Typography,
+  Input,
+  TextField,
+  InputAdornment,
+  makeStyles,
+  ListItemSecondaryAction,
+  ListItemIcon,
+} from '@material-ui/core';
+import { MdClose } from 'react-icons/md';
+import { Button } from 'gatsby-theme-material-ui';
+
+const StyledBox = styled(Box)`
+  & span {
+    flex-grow: 1;
+  }
+`;
+
+const inputProps = {
+  width: '25px',
+};
 
 const LineItem = props => {
   const context = useContext(StoreContext);
   const { line_item } = props;
+  const [quantity, setQuantity] = React.useState(line_item.quantity);
 
   const variantImage = line_item.variant.image ? (
     <img
@@ -26,32 +55,77 @@ const LineItem = props => {
     context.removeLineItem(context.client, context.checkout.id, line_item.id);
   };
 
+  const handleQtyChange = e => {
+    setQuantity(e.target.value);
+  };
+
+  const handleQtySubmit = e => {
+    if (e.key === 'Enter') {
+      if (quantity === 0) {
+        context.removeLineItem(
+          context.client,
+          context.checkout.id,
+          line_item.id
+        );
+        return;
+      }
+      context.updateLineItem(
+        context.client,
+        context.checkout.id,
+        line_item.id,
+        quantity
+      );
+    }
+  };
+
   return (
-    <Flex
-      py={2}
-      flexWrap="wrap"
-      justifyContent="space-between"
-      alignItems="center"
-    >
-      <Box>{variantImage}</Box>
-      <Box>
-        <p>
-          {line_item.title}
-          {`  `}
-          {line_item.variant.title === !'Default Title'
-            ? line_item.variant.title
-            : ''}
-        </p>
-      </Box>
-      <Box>{selectedOptions}</Box>
-      <Box>
-        {line_item.quantity}
-        {console.log(line_item)}
-      </Box>
-      <Box>
-        <button onClick={handleRemove}>Remove</button>
-      </Box>
-    </Flex>
+    <ListItem alignItems="flex-start">
+      <ListItemAvatar>
+        <Avatar>{variantImage}</Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <Typography variant="body2" style={{ maxWidth: '30ch' }}>
+            {line_item.title}
+          </Typography>
+        }
+        secondary={
+          <>
+            <Box>{selectedOptions}</Box>
+            <Button
+              color="secondary"
+              style={{
+                marginLeft: 0,
+                marginRight: 0,
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+              onClick={handleRemove}
+            >
+              Remove
+            </Button>
+          </>
+        }
+      />
+      <ListItemSecondaryAction>
+        <TextField
+          id="outlined-adornment-amount"
+          variant="outlined"
+          label="Qty"
+          value={quantity}
+          onChange={handleQtyChange}
+          onKeyPress={handleQtySubmit}
+          inputProps={{
+            size: 1,
+          }}
+          InputProps={{
+            style: {
+              height: 40,
+            },
+          }}
+        />
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 };
 

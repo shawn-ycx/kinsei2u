@@ -1,11 +1,22 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { StaticQuery, graphql } from 'gatsby'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { StaticQuery, graphql } from 'gatsby';
 
-import StoreContext, { defaultStoreContext } from '../context/StoreContext'
-// import { GlobalStyle } from '../utils/styles';
-import Navigation from '../components/Navigation'
-import ActionNav from '../components/Navigation/ActionNav'
+import StoreContext, { defaultStoreContext } from '../context/StoreContext';
+import { GlobalStyle } from '../utils/styles';
+import Navigation from '../components/Navigation';
+import { useTheme, makeStyles } from '@material-ui/styles';
+import {
+  CssBaseline,
+  Container,
+  Drawer,
+  Divider,
+  Typography,
+} from '@material-ui/core';
+import clsx from 'clsx';
+import { IconButton } from 'gatsby-theme-material-ui';
+import { MdChevronRight, MdChevronLeft } from 'react-icons/md';
+import Cart from '../components/Cart';
 
 class Layout extends React.Component {
   state = {
@@ -13,8 +24,8 @@ class Layout extends React.Component {
       ...defaultStoreContext,
       addVariantToCart: (variantId, quantity) => {
         if (variantId === '' || !quantity) {
-          console.error('Both a size and quantity are required.')
-          return
+          console.error('Both a size and quantity are required.');
+          return;
         }
 
         this.setState(state => ({
@@ -22,13 +33,13 @@ class Layout extends React.Component {
             ...state.store,
             adding: true,
           },
-        }))
+        }));
 
-        const { checkout, client } = this.state.store
-        const checkoutId = checkout.id
+        const { checkout, client } = this.state.store;
+        const checkoutId = checkout.id;
         const lineItemsToUpdate = [
           { variantId, quantity: parseInt(quantity, 10) },
-        ]
+        ];
 
         return client.checkout
           .addLineItems(checkoutId, lineItemsToUpdate)
@@ -39,8 +50,8 @@ class Layout extends React.Component {
                 checkout,
                 adding: false,
               },
-            }))
-          })
+            }));
+          });
       },
       removeLineItem: (client, checkoutID, lineItemID) => {
         return client.checkout
@@ -51,13 +62,13 @@ class Layout extends React.Component {
                 ...state.store,
                 checkout: res,
               },
-            }))
-          })
+            }));
+          });
       },
       updateLineItem: (client, checkoutID, lineItemID, quantity) => {
         const lineItemsToUpdate = [
           { id: lineItemID, quantity: parseInt(quantity, 10) },
-        ]
+        ];
 
         return client.checkout
           .updateLineItems(checkoutID, lineItemsToUpdate)
@@ -67,22 +78,22 @@ class Layout extends React.Component {
                 ...state.store,
                 checkout: res,
               },
-            }))
-          })
+            }));
+          });
       },
     },
-  }
+  };
 
   async initializeCheckout() {
     // Check for an existing cart.
-    const isBrowser = typeof window !== 'undefined'
+    const isBrowser = typeof window !== 'undefined';
     const existingCheckoutID = isBrowser
       ? localStorage.getItem('shopify_checkout_id')
-      : null
+      : null;
 
     const setCheckoutInState = checkout => {
       if (isBrowser) {
-        localStorage.setItem('shopify_checkout_id', checkout.id)
+        localStorage.setItem('shopify_checkout_id', checkout.id);
       }
 
       this.setState(state => ({
@@ -90,40 +101,40 @@ class Layout extends React.Component {
           ...state.store,
           checkout,
         },
-      }))
-    }
+      }));
+    };
 
-    const createNewCheckout = () => this.state.store.client.checkout.create()
-    const fetchCheckout = id => this.state.store.client.checkout.fetch(id)
+    const createNewCheckout = () => this.state.store.client.checkout.create();
+    const fetchCheckout = id => this.state.store.client.checkout.fetch(id);
 
     if (existingCheckoutID) {
       try {
-        const checkout = await fetchCheckout(existingCheckoutID)
+        const checkout = await fetchCheckout(existingCheckoutID);
 
         // Make sure this cart hasn’t already been purchased.
         if (!checkout.completedAt) {
-          setCheckoutInState(checkout)
-          return
+          setCheckoutInState(checkout);
+          return;
         }
       } catch (e) {
-        localStorage.setItem('shopify_checkout_id', null)
+        localStorage.setItem('shopify_checkout_id', null);
       }
     }
 
-    const newCheckout = await createNewCheckout()
-    setCheckoutInState(newCheckout)
+    const newCheckout = await createNewCheckout();
+    setCheckoutInState(newCheckout);
   }
 
   componentDidMount() {
-    this.initializeCheckout()
+    this.initializeCheckout();
   }
 
   render() {
-    const { children } = this.props
+    const { children } = this.props;
 
     return (
       <StoreContext.Provider value={this.state.store}>
-        {/* <GlobalStyle /> */}
+        <GlobalStyle />
         <StaticQuery
           query={graphql`
             query SiteTitleQuery {
@@ -135,28 +146,126 @@ class Layout extends React.Component {
             }
           `}
           render={data => (
-            <>
-              <Navigation siteTitle={data.site.siteMetadata.title} />
-              <div
-                style={{
-                  margin: `0 auto`,
-                  maxWidth: 960,
-                  padding: `0px 1.0875rem 1.45rem`,
-                  paddingTop: 0,
-                }}
-              >
-                {children}
-              </div>
-            </>
+            <RenderLayoutComponent data={data} children={children} />
           )}
         />
       </StoreContext.Provider>
-    )
+    );
   }
 }
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-}
+};
 
-export default Layout
+const drawerWidth = 400;
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    background: 'white',
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginRight: drawerWidth,
+  },
+  title: {
+    flexGrow: 1,
+  },
+  hide: {
+    display: 'none',
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-start',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginRight: -drawerWidth,
+    width: '100vw',
+  },
+  contentShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginRight: 0,
+  },
+}));
+
+const RenderLayoutComponent = ({ data, children }) => {
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(true);
+
+  const handleDrawerToggle = React.useCallback(() => setOpen(!open));
+
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <Navigation
+        controller={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+        cartHandler={handleDrawerToggle}
+        cartIsOpen={open}
+      />
+      <div
+        className={clsx(classes.content, {
+          [classes.contentShift]: open,
+        })}
+      >
+        {children}
+      </div>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="right"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerToggle}>
+            {theme.direction === 'rtl' ? <MdChevronLeft /> : <MdChevronRight />}
+          </IconButton>
+        </div>
+        <Divider />
+        <Cart />
+      </Drawer>
+    </div>
+  );
+};
+
+RenderLayoutComponent.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default Layout;
