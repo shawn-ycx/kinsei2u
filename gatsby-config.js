@@ -1,6 +1,6 @@
 require('dotenv').config({
-  path: `.env.${process.env.NODE_ENV}`,
-})
+  path: `.env`,
+});
 
 module.exports = {
   siteMetadata: {
@@ -70,4 +70,4 @@ module.exports = {
     // To learn more, visit: https://gatsby.app/offline
     // 'gatsby-plugin-offline',
   ],
-}
+};
