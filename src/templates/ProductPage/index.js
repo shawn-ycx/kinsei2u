@@ -10,14 +10,16 @@ import {
   ButtonBack,
   ButtonNext,
   DotGroup,
+  Dot,
 } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import Image from 'gatsby-image';
 
 const ProductPage = ({ data }) => {
   const product = data.shopifyProduct;
   return (
     <Flex flexWrap="wrap">
-      <Box pr={[null, 3]} width={[1, 1 / 2]}>
+      <Box pr={[null, 3]} width={[1, 1 / 2]} height={100}>
         <CarouselProvider
           naturalSlideWidth={100}
           naturalSlideHeight={125}
@@ -29,12 +31,10 @@ const ProductPage = ({ data }) => {
                 <Img
                   fluid={x.localFile.childImageSharp.fluid}
                   alt={product.title}
-                  height={100}
                 />
               </Slide>
             ))}
           </Slider>
-          <DotGroup />
         </CarouselProvider>
       </Box>
       <Box width={[1, 1 / 2]}>
