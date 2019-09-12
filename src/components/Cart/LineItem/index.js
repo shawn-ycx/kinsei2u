@@ -18,6 +18,10 @@ const LineItem = props => {
   const { line_item } = props
   const [quantity, setQuantity] = React.useState(line_item.quantity)
 
+  React.useEffect(() => {
+    setQuantity(line_item.quantity)
+  }, [line_item.quantity])
+
   const variantImage = line_item.variant.image ? (
     <img
       src={line_item.variant.image.src}

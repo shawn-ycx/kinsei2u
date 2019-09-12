@@ -12,11 +12,88 @@ import {
   Drawer,
   Divider,
   Typography,
+  Toolbar,
 } from '@material-ui/core'
 import clsx from 'clsx'
 import { IconButton } from 'gatsby-theme-material-ui'
 import { MdChevronRight, MdChevronLeft } from 'react-icons/md'
 import Cart from '../components/Cart'
+import ActionNav from '../components/Navigation/ActionNav'
+
+const drawerWidth = 400
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    background: 'white',
+  },
+  appBarShift: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+    },
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  hide: {
+    display: 'none',
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '90vw',
+      flexShrink: 0,
+    },
+  },
+  drawerPaper: {
+    [theme.breakpoints.down('sm')]: {
+      width: '90vw',
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+    },
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-start',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginRight: -drawerWidth,
+    width: '100vw',
+  },
+  contentShift: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+    },
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginRight: 0,
+  },
+}))
 
 class Layout extends React.Component {
   state = {
@@ -130,7 +207,7 @@ class Layout extends React.Component {
   }
 
   render() {
-    const { children } = this.props
+    const { children, window } = this.props
 
     return (
       <StoreContext.Provider value={this.state.store}>
@@ -146,7 +223,11 @@ class Layout extends React.Component {
             }
           `}
           render={data => (
-            <RenderLayoutComponent data={data} children={children} />
+            <RenderLayoutComponent
+              window={window}
+              data={data}
+              children={children}
+            />
           )}
         />
       </StoreContext.Provider>
@@ -158,82 +239,7 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
 }
 
-const drawerWidth = 400
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    background: 'white',
-  },
-  appBarShift: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '90vw',
-      flexShrink: 0,
-    },
-  },
-  drawerPaper: {
-    [theme.breakpoints.down('sm')]: {
-      width: '90vw',
-    },
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-    },
-  },
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-start',
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginRight: -drawerWidth,
-    width: '100vw',
-  },
-  contentShift: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: 0,
-  },
-}))
-
-const RenderLayoutComponent = ({ data, children }) => {
+const RenderLayoutComponent = ({ data, children, window }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -249,6 +255,13 @@ const RenderLayoutComponent = ({ data, children }) => {
         })}
         cartHandler={handleDrawerToggle}
       />
+      <ActionNav
+        controller={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+        window={window}
+      />
+      <Toolbar />
       <div
         className={clsx(classes.content, {
           [classes.contentShift]: open,

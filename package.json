@@ -38,6 +38,7 @@
     "react-typography": "^0.16.19",
     "rebass": "^4.0.5",
     "shopify-buy": "^2.7.1",
+    "styled-components": "^4.3.2",
     "theme-ui": "^0.2.41",
     "typography": "^0.16.19"
   },
