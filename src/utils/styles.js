@@ -1,22 +1,7 @@
 import React from 'react';
 import Image from 'gatsby-image';
-import { Flex } from 'rebass';
 import styled from '@emotion/styled-base';
 import { Global, css } from '@emotion/core';
-
-export const Container = props => (
-  <Flex
-    {...props}
-    mx="auto"
-    flexDirection="column"
-    px={[`1.0875rem`, null, null, 0]}
-    py="1.45rem"
-    css={{
-      margin: `0 auto`,
-      maxWidth: 960,
-    }}
-  />
-);
 
 export const Img = styled(Image)`
   max-width: 100 %;

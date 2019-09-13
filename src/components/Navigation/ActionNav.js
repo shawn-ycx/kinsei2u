@@ -1,60 +1,55 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Toolbar,
   Box,
   AppBar,
   Container,
   useScrollTrigger,
-  Menu,
-  MenuItem,
-} from '@material-ui/core'
-import styled from 'styled-components'
-import { Link } from 'gatsby-theme-material-ui'
+  Zoom,
+  makeStyles,
+  Typography,
+  Fade,
+} from '@material-ui/core';
+import styled from 'styled-components';
+import { Button } from 'gatsby-theme-material-ui';
+import { MdFace } from 'react-icons/md';
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+    color: theme.palette.text.primary,
+  },
+  input: {
+    display: 'none',
+  },
+}));
 
 const TransitionAppBar = styled(AppBar)`
   transition: all 300ms 100ms;
-`
+`;
 
-function ElevationScroll({ children, window }) {
-  // Note that you normally won't need to set the window ref as useScrollTrigger
-  // will default to window.
-  // This is only being set here because the demo is in an iframe.
+const ActionNav = props => {
   const trigger = useScrollTrigger({
+    target: props.window ? props.window() : undefined,
     disableHysteresis: true,
-    threshold: 0,
-    target: window ? window() : undefined,
-  })
+    threshold: 100,
+  });
 
-  return React.cloneElement(children, {
-    elevation: trigger ? 4 : 1,
-    position: trigger ? 'fixed' : 'relative',
-  })
-}
+  return (
+    <AppBar position="sticky">
+      <Toolbar>
+        <Fade in={trigger}>
+          <Typography variant="h6" style={{ letterSpacing: '2px' }}>
+            KINSEI
+          </Typography>
+        </Fade>
+        <Container>
+          <Button>Shop</Button>
+        </Container>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
-ElevationScroll.propTypes = {
-  children: PropTypes.element.isRequired,
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-}
-
-export default class ActionNav extends React.Component {
-  render() {
-    return (
-      <ElevationScroll window={this.props.window}>
-        <TransitionAppBar className={this.props.controller}>
-          <Container>
-            <Toolbar>
-              <Box style={{ width: '100%' }} display="flex" alignItems="center">
-                <Link>Shop</Link>
-              </Box>
-            </Toolbar>
-          </Container>
-        </TransitionAppBar>
-      </ElevationScroll>
-    )
-  }
-}
+export default ActionNav;

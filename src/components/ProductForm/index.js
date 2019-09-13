@@ -4,7 +4,22 @@ import PropTypes from 'prop-types';
 import StoreContext from '../../context/StoreContext';
 import VariantSelector from './VariantSelector';
 
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/styles';
+import { FormControl, Box } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+  paper: {
+    padding: theme.spacing(3, 2),
+    margin: theme.spacing(3, 0),
+  },
+}));
+
 const ProductForm = props => {
+  const classes = useStyles();
   const [quantity, setQuantity] = useState(1);
   const [variant, setVariant] = useState(props.product.variants[0]);
   const context = useContext(StoreContext);
@@ -21,24 +36,21 @@ const ProductForm = props => {
       defaultOptionValues[selector.name] = selector.values[0];
     });
     setVariant(defaultOptionValues);
-  }, []);
+  }, [props.product.options]);
 
-  useEffect(
-    () => {
-      checkAvailability(props.product.shopifyId);
-    },
-    [productVariant]
-  );
+  useEffect(() => {
+    const checkAvailability = productId => {
+      context.client.product.fetch(productId).then(product => {
+        // this checks the currently selected variant for availability
+        const result = product.variants.filter(
+          variant => variant.id === productVariant.shopifyId
+        );
+        setAvailable(result[0].available);
+      });
+    };
 
-  const checkAvailability = productId => {
-    context.client.product.fetch(productId).then(product => {
-      // this checks the currently selected variant for availability
-      const result = product.variants.filter(
-        variant => variant.id === productVariant.shopifyId
-      );
-      setAvailable(result[0].available);
-    });
-  };
+    checkAvailability(props.product.shopifyId);
+  }, [productVariant, props.product.shopifyId, context.client.product]);
 
   const handleQuantityChange = event => {
     setQuantity(event.target.value);
@@ -60,6 +72,7 @@ const ProductForm = props => {
     ? props.product.options.map(option => {
         return (
           <VariantSelector
+            value={variant[option.name]}
             onChange={handleOptionChange}
             key={option.id.toString()}
             option={option}
@@ -70,23 +83,43 @@ const ProductForm = props => {
 
   return (
     <>
-      <h3>${productVariant.price}</h3>
+      <Typography variant="h4" style={{ fontWeight: 500 }} color="primary">
+        RM {productVariant.price}
+      </Typography>
       {variantSelectors}
-      <label htmlFor="quantity">Quantity </label>
-      <input
-        type="number"
-        id="quantity"
-        name="quantity"
-        min="1"
-        step="1"
-        onChange={handleQuantityChange}
-        value={quantity}
-      />
-      <br />
-      <button type="submit" disabled={!available} onClick={handleAddToCart}>
-        Add to Cart
-      </button>
-      {!available && <p>This Product is out of Stock!</p>}
+      <Paper className={classes.paper} square>
+        <Typography variant="h6" color={available ? 'primary' : 'secondary'}>
+          {available ? 'Stock Available' : 'Sold Out!'}
+        </Typography>
+        {available && (
+          <Typography variant="body2">
+            Usually ships in 3 - 10 business days
+          </Typography>
+        )}
+      </Paper>
+      <Box display="flex" alignItems="center">
+        <TextField
+          variant="outlined"
+          label="Quantity"
+          value={quantity}
+          onChange={handleQuantityChange}
+          inputProps={{ min: 1, step: 1, type: 'number' }}
+          name="quantity"
+          id="quantity"
+          margin="dense"
+        />
+        <Button
+          className={classes.button}
+          type="submit"
+          disabled={!available}
+          onClick={handleAddToCart}
+          color="primary"
+          variant="contained"
+          style={{ marginLeft: '1rem' }}
+        >
+          Add to Cart
+        </Button>
+      </Box>
     </>
   );
 };

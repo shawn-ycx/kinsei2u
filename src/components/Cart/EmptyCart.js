@@ -1,12 +1,7 @@
 import React from 'react';
-import { Container, Typography, Box } from '@material-ui/core';
-import { Button } from 'gatsby-theme-material-ui';
-import {
-  MdShoppingCart,
-  MdAddShoppingCart,
-  MdShoppingBasket,
-  MdRemoveShoppingCart,
-} from 'react-icons/md';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import { MdShoppingBasket } from 'react-icons/md';
 
 const EmptyCart = () => {
   return (

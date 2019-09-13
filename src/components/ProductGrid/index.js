@@ -1,8 +1,10 @@
-import React from 'react'
-import { useStaticQuery, graphql, Link } from 'gatsby'
-import { Flex, Box } from 'rebass'
-import { Img } from '../../utils/styles'
-import { Grid, Container, Typography } from '@material-ui/core'
+import React from 'react';
+import { useStaticQuery, graphql, Link } from 'gatsby';
+
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+
+import { Img } from '../../utils/styles';
 
 const ProductGrid = () => {
   const data = useStaticQuery(
@@ -20,8 +22,8 @@ const ProductGrid = () => {
                 originalSrc
                 localFile {
                   childImageSharp {
-                    fluid(maxWidth: 910) {
-                      ...GatsbyImageSharpFluid_withWebp_tracedSVG
+                    resolutions(width: 250, height: 250) {
+                      ...GatsbyImageSharpResolutions_withWebp
                     }
                   }
                 }
@@ -34,38 +36,18 @@ const ProductGrid = () => {
         }
       }
     `
-  )
+  );
 
   return (
     <Container>
       <Grid container spacing={3}>
         {data.allShopifyProduct.edges.map(x => (
-          <Grid item xs={3}>
+          <Grid item xs={3} key={x.node.id}>
             <Link to={`/product/${x.node.handle}/`}>
               <Img
-                fluid={x.node.images[0].localFile.childImageSharp.fluid}
-                alt={x.node.handle}
-              />
-            </Link>
-            <p>{x.node.title}</p>
-          </Grid>
-        ))}
-        {data.allShopifyProduct.edges.map(x => (
-          <Grid item xs={3}>
-            <Link to={`/product/${x.node.handle}/`}>
-              <Img
-                fluid={x.node.images[0].localFile.childImageSharp.fluid}
-                alt={x.node.handle}
-              />
-            </Link>
-            <p>{x.node.title}</p>
-          </Grid>
-        ))}
-        {data.allShopifyProduct.edges.map(x => (
-          <Grid item xs={3}>
-            <Link to={`/product/${x.node.handle}/`}>
-              <Img
-                fluid={x.node.images[0].localFile.childImageSharp.fluid}
+                resolutions={
+                  x.node.images[0].localFile.childImageSharp.resolutions
+                }
                 alt={x.node.handle}
               />
             </Link>
@@ -74,7 +56,7 @@ const ProductGrid = () => {
         ))}
       </Grid>
     </Container>
-  )
-}
+  );
+};
 
-export default ProductGrid
+export default ProductGrid;

@@ -1,14 +1,23 @@
 require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
-})
+});
 
 module.exports = {
   siteMetadata: {
     title: `Kinsei2u`,
     description: `kinsei2u e-commerce revamp`,
+    facebook: `@kinseiinfo`,
+    twitter: `@kinseiinfo`,
     author: `@shawnycx`,
   },
   plugins: [
+    {
+      resolve: 'gatsby-plugin-webpack-bundle-analyzer',
+      options: {
+        analyzerPort: 3030,
+        production: true,
+      },
+    },
     'gatsby-theme-ui-blog',
     'gatsby-plugin-theme-ui',
     `gatsby-theme-material-ui`,
@@ -70,4 +79,4 @@ module.exports = {
     // To learn more, visit: https://gatsby.app/offline
     // 'gatsby-plugin-offline',
   ],
-}
+};

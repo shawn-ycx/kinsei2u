@@ -1,14 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-import { makeStyles, Container } from '@material-ui/core'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { Link, Button, GatsbyLink } from 'gatsby-theme-material-ui';
 
-import { Link } from 'gatsby-theme-material-ui'
-import { MdFace } from 'react-icons/md'
-import CartButton from '../Cart/CartButton'
-import ActionNav from './ActionNav'
+import { MdFace } from 'react-icons/md';
+import CartButton from '../Cart/CartButton';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,25 +25,28 @@ const useStyles = makeStyles(theme => ({
   logo: {
     fontSize: '1.5em',
   },
-}))
+}));
 
 const Navigation = ({ cartHandler, controller }) => {
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <>
       <AppBar position="relative" className={controller}>
-        <Toolbar>
+        <Toolbar variant="dense">
           <Typography variant="h6" className={classes.title}>
             <Link to="/" className={classes.logo}>
               <MdFace />
             </Link>
           </Typography>
+          <Button component={GatsbyLink} to="/contact-us">
+            <Typography color="textSecondary">Contact Us</Typography>
+          </Button>
           <CartButton click={cartHandler} />
         </Toolbar>
       </AppBar>
     </>
-  )
-}
+  );
+};
 
-export default Navigation
+export default Navigation;

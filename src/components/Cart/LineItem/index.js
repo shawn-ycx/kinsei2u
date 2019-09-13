@@ -1,26 +1,23 @@
-import React, { useContext } from 'react'
-import StoreContext from '../../../context/StoreContext'
-import {
-  Box,
-  styled,
-  ListItemAvatar,
-  Avatar,
-  ListItem,
-  ListItemText,
-  Typography,
-  TextField,
-  ListItemSecondaryAction,
-} from '@material-ui/core'
-import { Button } from 'gatsby-theme-material-ui'
+import React, { useContext } from 'react';
+import StoreContext from '../../../context/StoreContext';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
+import { Button } from 'gatsby-theme-material-ui';
 
 const LineItem = props => {
-  const context = useContext(StoreContext)
-  const { line_item } = props
-  const [quantity, setQuantity] = React.useState(line_item.quantity)
+  const context = useContext(StoreContext);
+  const { line_item } = props;
+  const [quantity, setQuantity] = React.useState(line_item.quantity);
 
   React.useEffect(() => {
-    setQuantity(line_item.quantity)
-  }, [line_item.quantity])
+    setQuantity(line_item.quantity);
+  }, [line_item.quantity]);
 
   const variantImage = line_item.variant.image ? (
     <img
@@ -28,23 +25,23 @@ const LineItem = props => {
       alt={`${line_item.title} product shot`}
       height="60px"
     />
-  ) : null
+  ) : null;
 
   const selectedOptions = line_item.variant.selectedOptions ? (
     <>
       {line_item.variant.selectedOptions.map(option => {
-        return `${option.name}: ${option.value} `
+        return `${option.name}: ${option.value} `;
       })}
     </>
-  ) : null
+  ) : null;
 
   const handleRemove = () => {
-    context.removeLineItem(context.client, context.checkout.id, line_item.id)
-  }
+    context.removeLineItem(context.client, context.checkout.id, line_item.id);
+  };
 
   const handleQtyChange = e => {
-    setQuantity(e.target.value)
-  }
+    setQuantity(e.target.value);
+  };
 
   const handleQtySubmit = e => {
     if (e.key === 'Enter') {
@@ -53,17 +50,17 @@ const LineItem = props => {
           context.client,
           context.checkout.id,
           line_item.id
-        )
-        return
+        );
+        return;
       }
       context.updateLineItem(
         context.client,
         context.checkout.id,
         line_item.id,
         quantity
-      )
+      );
     }
-  }
+  };
 
   return (
     <ListItem alignItems="flex-start">
@@ -105,6 +102,7 @@ const LineItem = props => {
           inputProps={{
             size: 1,
           }}
+          // eslint-disable-next-line
           InputProps={{
             style: {
               height: 40,
@@ -113,7 +111,7 @@ const LineItem = props => {
         />
       </ListItemSecondaryAction>
     </ListItem>
-  )
-}
+  );
+};
 
-export default LineItem
+export default LineItem;
