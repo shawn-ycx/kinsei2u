@@ -19,6 +19,7 @@ import {
   MdSecurity,
 } from 'react-icons/md';
 import uuid from 'uuid/v4';
+import Promotions from '../components/Promotions';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -50,10 +51,11 @@ const IndexPage = () => {
     <>
       <SEO title="Home" keywords={keywords} />
       <Container maxWidth="lg">
-        <Typography variant="h6" gutterBottom>
+        {/* <Promotions /> */}
+        {/* <Typography variant="h6" gutterBottom>
           Featured Categories
         </Typography>
-        <Grid container spacing={3}>
+         <Grid container spacing={3}>
           {categories.map(({ key, title, icon: Icon }) => (
             <Grid item key={key}>
               <Paper className={classes.paper}>
@@ -64,9 +66,10 @@ const IndexPage = () => {
               </Paper>
             </Grid>
           ))}
-        </Grid>
+        </Grid> */}
+
+        <ProductGrid />
       </Container>
-      <ProductGrid />
     </>
   );
 };

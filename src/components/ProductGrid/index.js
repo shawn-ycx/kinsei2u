@@ -5,6 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
 import { Img } from '../../utils/styles';
+import Product from './Product';
+import { Typography } from '@material-ui/core';
 
 const ProductGrid = () => {
   const data = useStaticQuery(
@@ -39,23 +41,21 @@ const ProductGrid = () => {
   );
 
   return (
-    <Container>
+    <>
+      <Typography variant="h4" gutterBottom>
+        Featured Products
+      </Typography>
       <Grid container spacing={3}>
-        {data.allShopifyProduct.edges.map(x => (
-          <Grid item xs={3} key={x.node.id}>
-            <Link to={`/product/${x.node.handle}/`}>
-              <Img
-                resolutions={
-                  x.node.images[0].localFile.childImageSharp.resolutions
-                }
-                alt={x.node.handle}
-              />
-            </Link>
-            <p>{x.node.title}</p>
+        {data.allShopifyProduct.edges.map(({ node }) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={node.id}>
+            <Product
+              productNode={node}
+              linkProps={{ to: `/product/${node.handle}/` }}
+            />
           </Grid>
         ))}
       </Grid>
-    </Container>
+    </>
   );
 };
 
