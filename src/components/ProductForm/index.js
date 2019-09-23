@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/styles';
-import { FormControl, Box } from '@material-ui/core';
+import { Box } from '@material-ui/core';
+import { AddToCart } from '../shared/Buttons';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -88,7 +89,7 @@ const ProductForm = props => {
       </Typography>
       {variantSelectors}
       <Paper className={classes.paper} square>
-        <Typography variant="h6" color={available ? 'primary' : 'secondary'}>
+        <Typography variant="h6" color={available ? 'primary' : 'error'}>
           {available ? 'Stock Available' : 'Sold Out!'}
         </Typography>
         {available && (
@@ -108,17 +109,15 @@ const ProductForm = props => {
           id="quantity"
           margin="dense"
         />
-        <Button
-          className={classes.button}
+        <AddToCart
+          cartArgs={{
+            productShopifyId: productVariant.shopifyId,
+            quantity,
+          }}
           type="submit"
-          disabled={!available}
-          onClick={handleAddToCart}
-          color="primary"
-          variant="contained"
           style={{ marginLeft: '1rem' }}
-        >
-          Add to Cart
-        </Button>
+          disabled={!available}
+        />
       </Box>
     </>
   );

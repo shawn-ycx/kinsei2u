@@ -1,22 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
 import { Box, Typography } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    margin: theme.spacing(1, 0),
-    minWidth: 120,
-  },
-}));
-
 const VariantSelector = props => {
   const { option } = props;
-  const classes = useStyles();
   return (
     <Box display="flex" flexDirection="column">
       <Box mr="1em">

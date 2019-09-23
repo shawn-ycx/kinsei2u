@@ -51,7 +51,7 @@ const CartButton = ({ siteTitle, click }) => {
       color="primary"
       className={classes.button}
       aria-label="add to shopping cart"
-      onClick={click}
+      onClick={context.toggleCartDrawer}
     >
       <StyledBadge badgeContent={quantity}>
         <MdShoppingCart />

@@ -6,6 +6,7 @@ import { Button } from 'gatsby-theme-material-ui';
 import { Paper, Box, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import StoreContext from '../../context/StoreContext';
+import { AddToCart } from '../shared/Buttons';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -71,14 +72,14 @@ const Product = ({ productNode, linkProps }) => {
             Learn More
           </Button>
         ) : (
-          <Button
-            className={classes.button}
+          <AddToCart
             fullWidth
-            color="primary"
-            variant="contained"
-          >
-            Add To Cart
-          </Button>
+            className={classes.button}
+            cartArgs={{
+              productShopifyId: productNode.variants[0].shopifyId,
+              quantity: 1,
+            }}
+          />
         )}
       </Box>
     </Paper>

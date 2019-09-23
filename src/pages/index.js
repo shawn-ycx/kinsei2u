@@ -1,13 +1,7 @@
 import React from 'react';
 import SEO from '../components/seo';
 import ProductGrid from '../components/ProductGrid';
-import {
-  Container,
-  Typography,
-  Paper,
-  makeStyles,
-  Grid,
-} from '@material-ui/core';
+import { Container, makeStyles } from '@material-ui/core';
 import {
   MdDesktopWindows,
   MdLaptop,

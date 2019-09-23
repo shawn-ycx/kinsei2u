@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 
 import StoreContext, { defaultStoreContext } from '../context/StoreContext';
-import { GlobalStyle } from '../utils/styles';
 import Navigation from '../components/Navigation';
 
-import { useTheme, makeStyles } from '@material-ui/styles';
+import { useTheme, ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
@@ -17,80 +16,8 @@ import { MdChevronRight, MdChevronLeft } from 'react-icons/md';
 import Cart from '../components/Cart';
 import ActionNav from '../components/Navigation/ActionNav';
 
-const drawerWidth = 400;
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    background: 'white',
-  },
-  appBarShift: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '90vw',
-      flexShrink: 0,
-    },
-  },
-  drawerPaper: {
-    [theme.breakpoints.down('sm')]: {
-      width: '90vw',
-    },
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-    },
-  },
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-start',
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginRight: -drawerWidth,
-    width: '100vw',
-  },
-  contentShift: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: 0,
-  },
-}));
+import theming from './theme';
+import { layoutStyles } from './layoutStyles';
 
 class Layout extends React.Component {
   state = {
@@ -155,6 +82,14 @@ class Layout extends React.Component {
             }));
           });
       },
+      toggleCartDrawer: () => {
+        this.setState(state => ({
+          store: {
+            ...state.store,
+            cartOpen: !state.store.cartOpen,
+          },
+        }));
+      },
     },
   };
 
@@ -208,7 +143,7 @@ class Layout extends React.Component {
 
     return (
       <StoreContext.Provider value={this.state.store}>
-        <GlobalStyle />
+        <CssBaseline />
         <StaticQuery
           query={graphql`
             query SiteTitleQuery {
@@ -237,52 +172,56 @@ Layout.propTypes = {
 };
 
 const RenderLayoutComponent = ({ data, children, window }) => {
-  const classes = useStyles();
+  const context = useContext(StoreContext);
+  const classes = layoutStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerToggle = React.useCallback(() => setOpen(!open), [open]);
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <Navigation
-        controller={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-        cartHandler={handleDrawerToggle}
-      />
-      <ActionNav
-        controller={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-        window={window}
-      />
-      <div
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        {children}
-      </div>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="right"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerToggle}>
-            {theme.direction === 'rtl' ? <MdChevronLeft /> : <MdChevronRight />}
-          </IconButton>
+    <ThemeProvider theme={theming}>
+      <div className={classes.root}>
+        <CssBaseline />
+        <Navigation
+          controller={clsx(classes.appBar, {
+            [classes.appBarShift]: context.cartOpen,
+          })}
+          window={window}
+        />
+        {/* <ActionNav
+          controller={clsx(classes.appBar, {
+            [classes.appBarShift]: context.cartOpen,
+          })}
+          window={window}
+        /> */}
+        <div
+          className={clsx(classes.content, {
+            [classes.contentShift]: context.cartOpen,
+          })}
+        >
+          {children}
         </div>
-        <Divider />
-        <Cart />
-      </Drawer>
-    </div>
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="right"
+          open={context.cartOpen}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={context.toggleCartDrawer}>
+              {theme.direction === 'rtl' ? (
+                <MdChevronLeft />
+              ) : (
+                <MdChevronRight />
+              )}
+            </IconButton>
+          </div>
+          <Divider />
+          <Cart />
+        </Drawer>
+      </div>
+    </ThemeProvider>
   );
 };
 

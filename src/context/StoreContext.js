@@ -8,10 +8,12 @@ const client = Client.buildClient({
 
 export const defaultStoreContext = {
   client,
+  cartOpen: false,
   adding: false,
   checkout: { lineItems: [] },
   products: [],
   shop: {},
+  toggleCartDrawer: () => {},
   addVariantToCart: () => {},
   removeLineItem: () => {},
   updateLineItem: () => {},

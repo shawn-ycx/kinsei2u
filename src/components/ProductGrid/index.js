@@ -1,10 +1,8 @@
 import React from 'react';
-import { useStaticQuery, graphql, Link } from 'gatsby';
+import { useStaticQuery, graphql } from 'gatsby';
 
 import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 
-import { Img } from '../../utils/styles';
 import Product from './Product';
 import { Typography } from '@material-ui/core';
 
@@ -31,7 +29,15 @@ const ProductGrid = () => {
                 }
               }
               variants {
+                id
+                title
                 price
+                availableForSale
+                shopifyId
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
           }

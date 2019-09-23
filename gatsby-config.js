@@ -18,8 +18,6 @@ module.exports = {
         production: true,
       },
     },
-    'gatsby-theme-ui-blog',
-    'gatsby-plugin-theme-ui',
     `gatsby-theme-material-ui`,
     `gatsby-plugin-react-helmet`,
     {
