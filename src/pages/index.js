@@ -1,7 +1,7 @@
-import React from 'react';
-import SEO from '../components/seo';
-import ProductGrid from '../components/ProductGrid';
-import { Container, makeStyles } from '@material-ui/core';
+import React from 'react'
+import SEO from '../components/seo'
+import ProductGrid from '../components/ProductGrid'
+import { Container, makeStyles } from '@material-ui/core'
 import {
   MdDesktopWindows,
   MdLaptop,
@@ -11,9 +11,9 @@ import {
   MdMouse,
   MdUsb,
   MdSecurity,
-} from 'react-icons/md';
-import uuid from 'uuid/v4';
-import Promotions from '../components/Promotions';
+} from 'react-icons/md'
+import uuid from 'uuid/v4'
+import Promotions from '../components/Promotions'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-}));
+}))
 
 const categories = [
   { key: uuid(), title: 'Desktop PC', icon: () => <MdDesktopWindows /> },
@@ -35,17 +35,17 @@ const categories = [
   { key: uuid(), title: 'PC Accessories', icon: () => <MdUsb /> },
   { key: uuid(), title: 'Mobile Phone', icon: () => <MdStayPrimaryPortrait /> },
   { key: uuid(), title: 'Software', icon: () => <MdSecurity /> },
-];
+]
 
 const IndexPage = () => {
-  const classes = useStyles();
-  const keywords = categories.map(cat => cat.title);
+  const classes = useStyles()
+  const keywords = categories.map(cat => cat.title)
 
   return (
     <>
       <SEO title="Home" keywords={keywords} />
+      <Promotions />
       <Container maxWidth="lg">
-        {/* <Promotions /> */}
         {/* <Typography variant="h6" gutterBottom>
           Featured Categories
         </Typography>
@@ -65,7 +65,7 @@ const IndexPage = () => {
         <ProductGrid />
       </Container>
     </>
-  );
-};
+  )
+}
 
-export default IndexPage;
+export default IndexPage

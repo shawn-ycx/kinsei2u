@@ -1,8 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Button, GatsbyLink } from 'gatsby-theme-material-ui';
-import { Box, Typography, Container } from '@material-ui/core';
+import React from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import { Button, GatsbyLink } from 'gatsby-theme-material-ui'
+import { Box, Typography, Container } from '@material-ui/core'
+import { MdMenu } from 'react-icons/md'
 
 const MegaMenu = styled.div`
   position: absolute;
@@ -50,7 +51,7 @@ const MegaMenu = styled.div`
       text-decoration: underline;
     }
   }
-`;
+`
 
 const InlineList = styled.nav`
   background-color: white;
@@ -77,7 +78,7 @@ const InlineList = styled.nav`
       }
     }
   }
-`;
+`
 
 const ActionNav = props => {
   return (
@@ -85,7 +86,7 @@ const ActionNav = props => {
       <Container maxWidth="xl">
         <ul>
           <li>
-            All Departments
+            <MdMenu /> All Departments
             <MegaMenu>
               <div class="menu-col-1">
                 <h3 class="menu-category">Category</h3>
@@ -284,7 +285,7 @@ const ActionNav = props => {
         </ul>
       </Container>
     </InlineList>
-  );
-};
+  )
+}
 
-export default ActionNav;
+export default ActionNav
