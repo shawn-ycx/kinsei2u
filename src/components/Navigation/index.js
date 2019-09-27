@@ -5,12 +5,13 @@ import { makeStyles } from '@material-ui/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Link, Button, GatsbyLink } from 'gatsby-theme-material-ui';
+import { Link, Button, IconButton } from 'gatsby-theme-material-ui';
 
-import { MdFace } from 'react-icons/md';
+import { MdFace, MdMenu } from 'react-icons/md';
 import CartButton from '../Cart/CartButton';
-import { useScrollTrigger, CssBaseline } from '@material-ui/core';
+import { useScrollTrigger, CssBaseline, Box, Fade } from '@material-ui/core';
 import clsx from 'clsx';
+import { fade } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,11 +23,12 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  title: {
-    flexGrow: 1,
-  },
   logo: {
-    fontSize: '1.5em',
+    verticalAlign: 'middle',
+    fontSize: '2em',
+  },
+  menu: {
+    marginRight: '.5rem',
   },
 }));
 
@@ -56,15 +58,20 @@ const Navigation = ({ cartHandler, controller, ...props }) => {
           position="sticky"
           className={clsx([controller, classes.appbar])}
         >
-          <Toolbar variant="dense">
-            <Typography variant="h6" className={classes.title}>
-              <Link to="/" className={classes.logo}>
-                <MdFace />
-              </Link>
-            </Typography>
-            <Button component={GatsbyLink} to="/contact-us">
+          <Toolbar variant="dense" style={{ padding: '.5rem 1rem' }}>
+            <Box
+              component={IconButton}
+              className={classes.menu}
+              display={{ xs: 'block', md: 'none', lg: 'none', xl: 'none' }}
+            >
+              <MdMenu />
+            </Box>
+            <Link to="/" className={classes.root}>
+              <MdFace className={classes.logo} />
+            </Link>
+            {/* <Button component={GatsbyLink} to="/contact-us">
               <Typography>Contact Us</Typography>
-            </Button>
+            </Button> */}
             <CartButton click={cartHandler} />
           </Toolbar>
         </AppBar>

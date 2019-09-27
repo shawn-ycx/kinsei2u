@@ -9,6 +9,16 @@ import TextField from '@material-ui/core/TextField';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import { Button } from 'gatsby-theme-material-ui';
+import { withStyles } from '@material-ui/styles';
+
+const StyledButton = withStyles(theme => ({
+  button: {
+    marginLeft: 0,
+    marginRight: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+}))(Button);
 
 const LineItem = props => {
   const context = useContext(StoreContext);
@@ -76,18 +86,7 @@ const LineItem = props => {
         secondary={
           <>
             {selectedOptions} <br />
-            <Button
-              color="secondary"
-              style={{
-                marginLeft: 0,
-                marginRight: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-              }}
-              onClick={handleRemove}
-            >
-              Remove
-            </Button>
+            <StyledButton onClick={handleRemove}>Remove</StyledButton>
           </>
         }
       />

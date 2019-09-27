@@ -18,6 +18,7 @@ import ActionNav from '../components/Navigation/ActionNav';
 
 import theming from './theme';
 import { layoutStyles } from './layoutStyles';
+import Footer from '../components/Footer';
 
 class Layout extends React.Component {
   state = {
@@ -190,7 +191,6 @@ const RenderLayoutComponent = ({ data, children, window }) => {
           controller={clsx(classes.appBar, {
             [classes.appBarShift]: context.cartOpen,
           })}
-          window={window}
         /> */}
         <div
           className={clsx(classes.content, {
@@ -199,6 +199,7 @@ const RenderLayoutComponent = ({ data, children, window }) => {
         >
           {children}
         </div>
+        {/* <Footer /> */}
         <Drawer
           className={classes.drawer}
           variant="persistent"
